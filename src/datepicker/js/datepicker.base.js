@@ -616,15 +616,17 @@ gj.datepicker.methods = {
         var $calendar, $rightIcon,
             $wrapper = $datepicker.parent('div[role="wrapper"]');
 
-        if (data.uiLibrary === 'bootstrap') {
-            $rightIcon = $('<span class="input-group-addon">' + data.icons.rightIcon + '</span>');
-        } else if (data.uiLibrary === 'bootstrap4') {
-            $rightIcon = $('<span class="input-group-append"><button class="btn btn-outline-secondary border-left-0" type="button">' + data.icons.rightIcon + '</button></span>');
-        } else {
-            $rightIcon = $(data.icons.rightIcon);
+        if (data.icons.rightIcon) {
+            if (data.uiLibrary === 'bootstrap') {
+                $rightIcon = $('<span class="input-group-addon">' + data.icons.rightIcon + '</span>');
+            } else if (data.uiLibrary === 'bootstrap4') {
+                $rightIcon = $('<span class="input-group-append"><button class="btn btn-outline-secondary border-left-0" type="button">' + data.icons.rightIcon + '</button></span>');
+            } else {
+                $rightIcon = $(data.icons.rightIcon);
+            }
+            $rightIcon.attr('role', 'right-icon');
         }
 
-        $rightIcon.attr('role', 'right-icon');
         if ($wrapper.length === 0) {
             $wrapper = $('<div role="wrapper" />').addClass(data.style.wrapper); // The css class needs to be added before the wrapping, otherwise doesn't work.
             $datepicker.wrap($wrapper);
@@ -655,15 +657,17 @@ gj.datepicker.methods = {
             }
         }
 
-        $rightIcon.on('click', function (e) {
-            var $calendar = $('body').find('[role="calendar"][guid="' + $datepicker.attr('data-guid') + '"]');
-            if ($calendar.is(':visible')) {
-                gj.datepicker.methods.close($datepicker);
-            } else {
-                gj.datepicker.methods.open($datepicker, data);
-            }
-        });
-        $wrapper.append($rightIcon);
+        if ($rightIcon) {
+            $rightIcon.on('click', function (e) {
+                var $calendar = $('body').find('[role="calendar"][guid="' + $datepicker.attr('data-guid') + '"]');
+                if ($calendar.is(':visible')) {
+                    gj.datepicker.methods.close($datepicker);
+                } else {
+                    gj.datepicker.methods.open($datepicker, data);
+                }
+            });
+            $wrapper.append($rightIcon);
+        }
 
         $calendar = gj.datepicker.methods.createCalendar($datepicker, data);
 
